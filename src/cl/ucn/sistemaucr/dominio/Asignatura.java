@@ -1,5 +1,7 @@
 package cl.ucn.sistemaucr.dominio;
 
+import cl.ucn.sistemaucr.logica.ListaParalelos;
+
 public class Asignatura {
 	private String codigo;
 	private String nombre;

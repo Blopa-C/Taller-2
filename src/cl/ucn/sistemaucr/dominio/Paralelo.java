@@ -1,5 +1,7 @@
 package cl.ucn.sistemaucr.dominio;
 
+import cl.ucn.sistemaucr.logica.ListaAlumnos;
+
 public class Paralelo {
 	private int numero;
 	private Asignatura asignatura;

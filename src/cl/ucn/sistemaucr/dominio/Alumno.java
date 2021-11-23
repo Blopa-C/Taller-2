@@ -1,5 +1,8 @@
 package cl.ucn.sistemaucr.dominio;
 
+import cl.ucn.sistemaucr.logica.ListaNotas;
+import cl.ucn.sistemaucr.logica.ListaParalelos;
+
 public class Alumno {
 	private String rut;
 	private String correo;

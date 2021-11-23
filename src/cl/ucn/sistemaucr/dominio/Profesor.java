@@ -1,5 +1,7 @@
 package cl.ucn.sistemaucr.dominio;
 
+import cl.ucn.sistemaucr.logica.ListaParalelos;
+
 public class Profesor {
 	private String rut;
 	private String correo;
