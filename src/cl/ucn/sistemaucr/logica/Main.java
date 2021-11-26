@@ -11,10 +11,29 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 		
 		leerArchivoAsignaturas(sistema);
+		leerArchivoProfesores(sistema);
+	}
+
+	private static void leerArchivoProfesores(SistemaUCR sistema) throws IOException {
+		Scanner scan = new Scanner(new File("profesores.txt"));
+		outer:
+		while (scan.hasNextLine()) {
+			String[] partes = scan.nextLine().split("");
+			String rut = partes[0];
+			String correo = partes[1];
+			String contrasena = partes[2];
+			int salario = Integer.parseInt(partes[3]);
+			if (!sistema.ingresarProfesor(rut, correo, contrasena, salario)) {
+				System.out.println("No hay espacio para mas profesores en el sistema");
+				break outer;
+			}
+		}
+		scan.close();
 	}
 
 	private static void leerArchivoAsignaturas(SistemaUCR sistema) throws IOException {
 		Scanner scan = new Scanner(new File("asignaturas.txt"));
+		outer:
 		while (scan.hasNextLine()) {
 			String[] partes = scan.nextLine().split("");
 			String codigo = partes[0];
@@ -29,11 +48,18 @@ public class Main {
 				for (int i = 6; i < i + cantAsig; i++) {
 					prerrequisitos[j++] = partes[i];
 				}
-				sistema.ingresarAsignaturaObligatoria(codigo, nombre, creditos, nivel, prerrequisitos);
+				if (!sistema.ingresarAsignaturaObligatoria(codigo, nombre, creditos, nivel, 
+						prerrequisitos)) {
+					System.out.println("No hay espacio para mas asignaturas en el sistema");
+					break outer;
+				};
 			}
 			else {
 				int cantPrerreq = Integer.parseInt(partes[4]);
-				sistema.ingresarAsignaturaOpcional(codigo, nombre, creditos, cantPrerreq);
+				if (!sistema.ingresarAsignaturaOpcional(codigo, nombre, creditos, cantPrerreq)) {
+					System.out.println("No hay espacio para mas asignaturas en el sistema");
+					break outer;
+				};
 			}
 		}
 		scan.close();
