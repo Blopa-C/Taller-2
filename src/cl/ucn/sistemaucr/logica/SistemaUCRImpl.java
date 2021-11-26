@@ -24,15 +24,16 @@ public class SistemaUCRImpl implements SistemaUCR {
 	@Override
 	public boolean ingresarAsignaturaObligatoria(String codigo, String nombre, int creditos,
 			int nivel, String[] prerrequisitos) {
-		// TODO Auto-generated method stub
-		return false;
+		Asignatura asig = new AsignaturaObligatoria(codigo, nombre, creditos, nivel,
+				prerrequisitos);
+		return asignaturas.ingresarAsignatura(asig);
 	}
 
 	@Override
 	public boolean ingresarAsignaturaOpcional(String codigo, String nombre, int creditos, 
-			int creditosPrerrequisito) {
-		// TODO Auto-generated method stub
-		return false;
+			int creditosPrerreq) {
+		Asignatura asig = new AsignaturaOpcional(codigo, nombre, creditos, creditosPrerreq);
+		return asignaturas.ingresarAsignatura(asig);
 	}
 
 	@Override
