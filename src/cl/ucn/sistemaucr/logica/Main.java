@@ -13,6 +13,50 @@ public class Main {
 		leerArchivoAsignaturas(sistema);
 		leerArchivoProfesores(sistema);
 		leerArchivoParalelos(sistema);
+		leerArchivoEstudiantes(sistema);
+	}
+
+	private static void leerArchivoEstudiantes(SistemaUCR sistema) throws IOException {
+		Scanner scan = new Scanner(new File("estudiantes.txt"));
+		outer:
+		while (scan.hasNextLine()) {
+			String[] partes = scan.nextLine().split("");
+			int cont = 0;
+			String rut = partes[cont++];
+			String correo = partes[cont++];
+			int nivel = Integer.parseInt(partes[cont++]);
+			String contrasena = partes[cont++];
+			if (!sistema.ingresarAlumno(rut, correo, nivel, contrasena)) {
+				System.out.println("No hay espacio para mas estudiantes en el sistema");
+				break outer;
+			}
+			int cantAsig = Integer.parseInt(partes[cont++]);
+			for (int i = 0; i < cantAsig; i++) {
+				String codigo = partes[cont++];
+				double nota = Double.parseDouble(partes[cont++]);
+				try {
+					if (!sistema.asociarNotaAlumno(correo, codigo, nota)) {
+						System.out.print("No hay espacio para mas notas en el alumno");
+						continue outer;
+					}
+				}
+				catch (NullPointerException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			cantAsig = Integer.parseInt(partes[cont++]);
+			for (int i = 0; i < cantAsig; i++) {
+				String codigo = partes[cont++];
+				int numParal = Integer.parseInt(partes[cont++]);
+				try {
+					sistema.asociarNotaAlumno(correo, codigo, numParal);
+				}
+				catch (NullPointerException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		scan.close();
 	}
 
 	private static void leerArchivoParalelos(SistemaUCR sistema) throws IOException {

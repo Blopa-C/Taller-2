@@ -17,8 +17,8 @@ public class SistemaUCRImpl implements SistemaUCR {
 	
 	@Override
 	public boolean ingresarAlumno(String rut, String correo, int nivel, String contrasena) {
-		// TODO Auto-generated method stub
-		return false;
+		Alumno alum = new Alumno(rut, correo, nivel, contrasena);
+		return alumnos.ingresarAlumno(alum);
 	}
 
 	@Override
@@ -59,15 +59,43 @@ public class SistemaUCRImpl implements SistemaUCR {
 
 	@Override
 	public boolean asociarNotaAlumno(String correoAlumno, String codigoAsignatura, double nota) {
-		// TODO Auto-generated method stub
-		return false;
+		int iAlum = alumnos.indexOf(correoAlumno);
+		int iAsig = asignaturas.indexOf(codigoAsignatura);
+		if (iAsig == -1) {
+			throw new NullPointerException("Asignatura no existe");
+		}
+		else {
+			Alumno alum = alumnos.getAlumnoAt(iAlum);
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			NotaFinal notaFinal = new NotaFinal(nota, asig);
+			ListaNotas notas = alum.getAsignaturasCursadas();
+			return notas.ingresarNota(notaFinal);
+		}
 	}
 
 	@Override
 	public boolean asociarParaleloAlumno(String correoAlumno, String codigoAsignatura,
 			int numero) {
-		// TODO Auto-generated method stub
-		return false;
+		int iAlum = alumnos.indexOf(correoAlumno);
+		Alumno alum = alumnos.getAlumnoAt(iAlum);
+		int iAsig = asignaturas.indexOf(codigoAsignatura);
+		if (iAsig == -1) {
+			throw new NullPointerException();
+		}
+		else {
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			ListaParalelos paralelos = asig.getParalelos();
+			int iParal = paralelos.indexOf(numero);
+			if (iParal == -1) {
+				throw new NullPointerException();
+			}
+			else {
+				Paralelo paral = paralelos.getParaleloAt(iParal);
+				ListaAlumnos inscritos = paral.getAlumnosInscritos();
+				alum.getAsignaturasInscritas().ingresarParalelo(paral);
+				return inscritos.ingresarAlumno(alum);
+			}
+		}
 	}
 
 	@Override
