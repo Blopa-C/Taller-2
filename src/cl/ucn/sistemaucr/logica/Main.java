@@ -12,6 +12,29 @@ public class Main {
 		
 		leerArchivoAsignaturas(sistema);
 		leerArchivoProfesores(sistema);
+		leerArchivoParalelos(sistema);
+	}
+
+	private static void leerArchivoParalelos(SistemaUCR sistema) throws IOException {
+		Scanner scan = new Scanner(new File("paralelos.txt"));
+		outer:
+		while (scan.hasNextLine()) {
+			String[] partes = scan.nextLine().split("");
+			int cont = 0;
+			int numero = Integer.parseInt(partes[cont++]);
+			String codigo = partes[cont++];
+			String rutProfesor = partes[cont++];
+			try {
+				if (!sistema.ingresarParalelo(numero, codigo, rutProfesor)) {
+					System.out.println("No hay espacio para mas paralelos en el sistema");
+					break outer;
+				}
+			}
+			catch (NullPointerException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		scan.close();
 	}
 
 	private static void leerArchivoProfesores(SistemaUCR sistema) throws IOException {

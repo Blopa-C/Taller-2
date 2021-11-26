@@ -38,14 +38,23 @@ public class SistemaUCRImpl implements SistemaUCR {
 
 	@Override
 	public boolean ingresarProfesor(String rut, String correo, String contrasena, int salario) {
-		// TODO Auto-generated method stub
-		return false;
+		Profesor p = new Profesor(rut, correo, contrasena, salario);
+		return profesores.ingresarProfesor(p);
 	}
 
 	@Override
 	public boolean ingresarParalelo(int numero, String codigo, String rutProfesor) {
-		// TODO Auto-generated method stub
-		return false;
+		int iAsig = asignaturas.indexOf(codigo);
+		int iProf = profesores.indexOf(rutProfesor);
+		if (iAsig == -1 || iProf == -1) {
+			throw new NullPointerException("Asignatura y/o profesor no existen");
+		}
+		else {
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			Profesor prof = profesores.getProfesorAt(iProf);
+			Paralelo paral = new Paralelo(numero, asig, prof);
+			return paralelos.ingresarParalelo(paral);
+		}
 	}
 
 	@Override
