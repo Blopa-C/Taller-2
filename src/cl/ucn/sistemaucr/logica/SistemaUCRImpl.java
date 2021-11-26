@@ -17,47 +17,85 @@ public class SistemaUCRImpl implements SistemaUCR {
 	
 	@Override
 	public boolean ingresarAlumno(String rut, String correo, int nivel, String contrasena) {
-		// TODO Auto-generated method stub
-		return false;
+		Alumno alum = new Alumno(rut, correo, nivel, contrasena);
+		return alumnos.ingresarAlumno(alum);
 	}
 
 	@Override
 	public boolean ingresarAsignaturaObligatoria(String codigo, String nombre, int creditos,
 			int nivel, String[] prerrequisitos) {
-		// TODO Auto-generated method stub
-		return false;
+		Asignatura asig = new AsignaturaObligatoria(codigo, nombre, creditos, nivel,
+				prerrequisitos);
+		return asignaturas.ingresarAsignatura(asig);
 	}
 
 	@Override
 	public boolean ingresarAsignaturaOpcional(String codigo, String nombre, int creditos, 
-			int creditosPrerrequisito) {
-		// TODO Auto-generated method stub
-		return false;
+			int creditosPrerreq) {
+		Asignatura asig = new AsignaturaOpcional(codigo, nombre, creditos, creditosPrerreq);
+		return asignaturas.ingresarAsignatura(asig);
 	}
 
 	@Override
 	public boolean ingresarProfesor(String rut, String correo, String contrasena, int salario) {
-		// TODO Auto-generated method stub
-		return false;
+		Profesor p = new Profesor(rut, correo, contrasena, salario);
+		return profesores.ingresarProfesor(p);
 	}
 
 	@Override
 	public boolean ingresarParalelo(int numero, String codigo, String rutProfesor) {
-		// TODO Auto-generated method stub
-		return false;
+		int iAsig = asignaturas.indexOf(codigo);
+		int iProf = profesores.indexOf(rutProfesor);
+		if (iAsig == -1 || iProf == -1) {
+			throw new NullPointerException("Asignatura y/o profesor no existen");
+		}
+		else {
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			Profesor prof = profesores.getProfesorAt(iProf);
+			Paralelo paral = new Paralelo(numero, asig, prof);
+			return paralelos.ingresarParalelo(paral);
+		}
 	}
 
 	@Override
 	public boolean asociarNotaAlumno(String correoAlumno, String codigoAsignatura, double nota) {
-		// TODO Auto-generated method stub
-		return false;
+		int iAlum = alumnos.indexOf(correoAlumno);
+		int iAsig = asignaturas.indexOf(codigoAsignatura);
+		if (iAsig == -1) {
+			throw new NullPointerException("Asignatura no existe");
+		}
+		else {
+			Alumno alum = alumnos.getAlumnoAt(iAlum);
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			NotaFinal notaFinal = new NotaFinal(nota, asig);
+			ListaNotas notas = alum.getAsignaturasCursadas();
+			return notas.ingresarNota(notaFinal);
+		}
 	}
 
 	@Override
 	public boolean asociarParaleloAlumno(String correoAlumno, String codigoAsignatura,
 			int numero) {
-		// TODO Auto-generated method stub
-		return false;
+		int iAlum = alumnos.indexOf(correoAlumno);
+		Alumno alum = alumnos.getAlumnoAt(iAlum);
+		int iAsig = asignaturas.indexOf(codigoAsignatura);
+		if (iAsig == -1) {
+			throw new NullPointerException();
+		}
+		else {
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			ListaParalelos paralelos = asig.getParalelos();
+			int iParal = paralelos.indexOf(numero);
+			if (iParal == -1) {
+				throw new NullPointerException();
+			}
+			else {
+				Paralelo paral = paralelos.getParaleloAt(iParal);
+				ListaAlumnos inscritos = paral.getAlumnosInscritos();
+				alum.getAsignaturasInscritas().ingresarParalelo(paral);
+				return inscritos.ingresarAlumno(alum);
+			}
+		}
 	}
 
 	@Override
