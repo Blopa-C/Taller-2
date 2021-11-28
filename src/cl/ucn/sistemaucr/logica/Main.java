@@ -72,7 +72,7 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 		SimpleDateFormat dateFormat = new 
                 SimpleDateFormat ("dd-MM-yyyy");
-		System.out.println("Ingrese la fecha FORMATO yyyy-MM-dd: ");
+		System.out.println("Ingrese la fecha (con el formato dd-MM-yyyy): ");
 		String fecha = scan.nextLine();
 		int op = 0;
 		try {
@@ -97,6 +97,7 @@ public class Main {
 				//op = 5; Vacaciones
 			}else {
 				//op = 6; Fecha sin periodos correspondientes
+				ingresarFecha();
 			}
 		}catch (ParseException ex) {
 			System.out.println("Opcion invalida reintente");
