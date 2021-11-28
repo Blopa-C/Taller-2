@@ -9,11 +9,57 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		SistemaUCR sistema = new SistemaUCRImpl();
 		Scanner scan = new Scanner(System.in);
-		
-		leerArchivoAsignaturas(sistema);
-		leerArchivoProfesores(sistema);
-		leerArchivoParalelos(sistema);
-		leerArchivoEstudiantes(sistema);
+		/*
+		 * leerArchivoAsignaturas(sistema);
+		 * leerArchivoProfesores(sistema);
+		 * leerArchivoParalelos(sistema);
+		 * leerArchivoEstudiantes(sistema);
+		 */
+		iniciarSesion(sistema, scan);
+	}
+
+	private static void iniciarSesion(SistemaUCR sistema, Scanner scan) {
+		System.out.println(("\n>--- INICIO DE SESION ---<\n"));
+		System.out.print("Correo: ");
+		String correo = scan.nextLine();
+		System.out.print("Contraseña: ");
+		String contrasena = scan.nextLine();
+		try {
+			if (correo.equals("Admin") && contrasena.equals("GHI_789")) {
+				System.out.println("aqui admin");
+				// cerrarSemestre();
+			}
+			else if (correo.split("@")[1].equals("alumnos.ucn.cl")) {
+				try {
+					if (sistema.validarAlumno(correo, contrasena)) {
+						// ingresarFecha();
+					}
+					else {
+						System.out.println("Contraseña incorrecta");
+					}
+				}
+				catch (NullPointerException e) {
+					System.out.println("\n** " + e.getMessage() + " **");
+				}
+			}
+			else if (correo.split("@")[1].equals("ucn.cl")) {
+				try {
+					if (sistema.validarProfesor(correo, contrasena)) {
+						// ingresarFecha();
+					}
+					else {
+						System.out.println("Contraseña incorrecta");
+					}
+				}
+				catch (NullPointerException e) {
+					System.out.println("\n** " + e.getMessage() + " **");
+				}
+			}
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Correo invalido");
+		}
+		iniciarSesion(sistema, scan);
 	}
 
 	private static void leerArchivoEstudiantes(SistemaUCR sistema) throws IOException {

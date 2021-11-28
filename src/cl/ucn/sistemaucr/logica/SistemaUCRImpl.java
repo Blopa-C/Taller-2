@@ -100,14 +100,36 @@ public class SistemaUCRImpl implements SistemaUCR {
 
 	@Override
 	public boolean validarAlumno(String correo, String contrasena) {
-		// TODO Auto-generated method stub
-		return false;
+		int i = alumnos.indexOf(correo);
+		if (i == -1) {
+			throw new NullPointerException("El alumno no existe");
+		}
+		else {
+			Alumno alum = alumnos.getAlumnoAt(i);
+			if (alum.getContrasena().equals(contrasena)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 
 	@Override
 	public boolean validarProfesor(String correo, String contrasena) {
-		// TODO Auto-generated method stub
-		return false;
+		int i = profesores.indexOf(correo);
+		if (i == -1) {
+			throw new NullPointerException("El profesor no existe");
+		}
+		else {
+			Profesor prof = profesores.getProfesorAt(i);
+			if (prof.getContrasena().equals(contrasena)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 
 	@Override
