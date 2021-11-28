@@ -1,8 +1,11 @@
 package cl.ucn.sistemaucr.logica;
 
+import java.util.Date;
 import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Main {
 
@@ -32,7 +35,8 @@ public class Main {
 			else if (correo.split("@")[1].equals("alumnos.ucn.cl")) {
 				try {
 					if (sistema.validarAlumno(correo, contrasena)) {
-						// ingresarFecha();
+						int op = ingresarFecha();
+						
 					}
 					else {
 						System.out.println("Contraseña incorrecta");
@@ -60,6 +64,46 @@ public class Main {
 			System.out.println("Correo invalido");
 		}
 		iniciarSesion(sistema, scan);
+	}
+
+	
+
+	private static int ingresarFecha() {
+		Scanner scan = new Scanner(System.in);
+		SimpleDateFormat dateFormat = new 
+                SimpleDateFormat ("dd-MM-yyyy");
+		System.out.println("Ingrese la fecha FORMATO yyyy-MM-dd: ");
+		String fecha = scan.nextLine();
+		int op = 0;
+		try {
+			Date dateInput = dateFormat.parse(fecha);
+			Date date1 = dateFormat.parse("07-03-2021");
+			Date date2 = dateFormat.parse("02-05-2021");
+			Date date3= dateFormat.parse("11-07-2021");
+			Date dateClosure = dateFormat.parse("26-07-2021");
+			if(dateInput.after(date1) && dateInput.before(date2)) {
+				//op = 1;  Inicio de semestre
+			}else
+			if(dateInput.after(date2) && dateInput.before(date3)) {
+				//op = 2; Mitad de semestre
+			}else
+			if(dateInput.after(date3) && dateInput.before(dateClosure)) {
+				//op = 3; Final de semestre
+			}else 
+			if(dateInput.equals(dateClosure)) {
+				//op = 4; Cierre del semestre
+			}else 
+			if(dateInput.after(dateClosure)){
+				//op = 5; Vacaciones
+			}else {
+				//op = 6; Fecha sin periodos correspondientes
+			}
+		}catch (ParseException ex) {
+			System.out.println("Opcion invalida reintente");
+			ingresarFecha();
+		}
+		return op;
+		
 	}
 
 	private static void leerArchivoEstudiantes(SistemaUCR sistema) throws IOException {
