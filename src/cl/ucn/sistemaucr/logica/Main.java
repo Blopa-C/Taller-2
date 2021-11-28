@@ -81,10 +81,10 @@ public class Main {
 			Date date2 = dateFormat.parse("02-05-2021");
 			Date date3= dateFormat.parse("11-07-2021");
 			Date dateClosure = dateFormat.parse("26-07-2021");
-			if(dateInput.after(date1) && dateInput.before(date2)) {
+			if(dateInput.after(date1) && (dateInput.before(date2) || dateInput.equals(date2))) {
 				//op = 1;  Inicio de semestre
 			}else
-			if(dateInput.after(date2) && dateInput.before(date3)) {
+			if(dateInput.after(date2) && (dateInput.before(date3) || dateInput.equals(date3))) {
 				//op = 2; Mitad de semestre
 			}else
 			if(dateInput.after(date3) && dateInput.before(dateClosure)) {
@@ -104,7 +104,6 @@ public class Main {
 			ingresarFecha();
 		}
 		return op;
-		
 	}
 
 	private static void leerArchivoEstudiantes(SistemaUCR sistema) throws IOException {
