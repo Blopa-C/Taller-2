@@ -8,6 +8,7 @@ public class Alumno {
 	private String correo;
 	private int nivel;
 	private String contrasena;
+	private int creditos;
 	private ListaNotas asignaturasCursadas;
 	private ListaParalelos asignaturasInscritas;
 	
@@ -16,6 +17,7 @@ public class Alumno {
 		this.correo = correo;
 		this.nivel = nivel;
 		this.contrasena = contrasena;
+		creditos = 0;
 		asignaturasCursadas = new ListaNotas(1000);
 		asignaturasInscritas = new ListaParalelos(1000);
 	}
@@ -50,6 +52,14 @@ public class Alumno {
 
 	public void setContrasena(String contrasena) {
 		this.contrasena = contrasena;
+	}
+
+	public int getCreditos() {
+		return creditos;
+	}
+
+	public void setCreditos(int creditos) {
+		this.creditos = creditos;
 	}
 
 	public ListaNotas getAsignaturasCursadas() {

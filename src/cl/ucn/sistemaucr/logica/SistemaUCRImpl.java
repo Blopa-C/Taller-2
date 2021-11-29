@@ -69,7 +69,11 @@ public class SistemaUCRImpl implements SistemaUCR {
 			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
 			NotaFinal notaFinal = new NotaFinal(nota, asig);
 			ListaNotas notas = alum.getAsignaturasCursadas();
-			return notas.ingresarNota(notaFinal);
+			boolean ingreso = notas.ingresarNota(notaFinal);
+			if (ingreso && nota >= 3.95) {
+				alum.setCreditos(alum.getCreditos() + asig.getCreditos());
+			}
+			return ingreso;
 		}
 	}
 
@@ -133,14 +137,7 @@ public class SistemaUCRImpl implements SistemaUCR {
 	}
 
 	@Override
-	public int verificarFecha(String fecha) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public String obtenerAsignaturasDisponibles(String correoAlumno) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

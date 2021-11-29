@@ -22,8 +22,6 @@ public interface SistemaUCR {
 	
 	boolean validarProfesor(String correo, String contrasena);
 	
-	int verificarFecha(String fecha);
-	
 	String obtenerAsignaturasDisponibles(String correoAlumno);
 	
 	String obtenerParalelosDisponibles(String codigoAsignatura);
