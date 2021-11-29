@@ -152,6 +152,18 @@ public class SistemaUCRImpl implements SistemaUCR {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public boolean chequearAsignaturasInscritas(String correoAlumno) {
+		Alumno alum = alumnos.getAlumnoAt(alumnos.indexOf(correoAlumno));
+		ListaParalelos inscritas = alum.getAsignaturasInscritas();
+		if (inscritas.getCantParalelos() == 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 	@Override
 	public String obtenerAsignaturasInscritas(String correoAlumno) {
@@ -174,7 +186,16 @@ public class SistemaUCRImpl implements SistemaUCR {
 		}
 		else {
 			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
-			
+			ListaParalelos inscritasAlum = alum.getAsignaturasInscritas();
+			Paralelo paral = inscritasAlum.getParaleloAt(inscritasAlum.indexOf(asig));
+			if (inscritasAlum.eliminarParalelo(asig)) {
+				ListaAlumnos inscritos = paral.getAlumnosInscritos();
+				inscritos.eliminarAlumno(correoAlumno);
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 

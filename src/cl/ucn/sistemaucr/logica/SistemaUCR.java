@@ -28,6 +28,8 @@ public interface SistemaUCR {
 	
 	boolean verificarCreditos(String correoAlumno, String codigoAsignatura, int numero);
 	
+	boolean chequearAsignaturasInscritas(String correoAlumno); // Nuevo
+	
 	String obtenerAsignaturasInscritas(String correoAlumno);
 	
 	boolean eliminarAsignaturaInscrita(String correoAlumno, String codigoAsignatura);

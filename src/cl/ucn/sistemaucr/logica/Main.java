@@ -41,6 +41,7 @@ public class Main {
 							menuInicioSemestreAlumno(sistema, scan, correo);
 							break;
 						case 2:
+							menuMitadSemestreAlumno(sistema, scan, correo);
 							break;
 						case 3:
 							break;
@@ -78,11 +79,32 @@ public class Main {
 		iniciarSesion(sistema, scan);
 	}
 
+	private static void menuMitadSemestreAlumno(SistemaUCR sistema, Scanner scan, 
+			String correo) {
+		System.out.println("\n>--- MENU MITAD DE SEMESTRE ---<\n");
+		System.out.println("[1] Eliminacion de asignaturas");
+		System.out.println("[2] Volver al inicio de sesion");
+		System.out.print("Opcion: ");
+		String opcion = scan.nextLine();
+		switch (opcion) {
+		case "1":
+			eliminarAsignatura(sistema, scan, correo);
+			break;
+		case "2":
+			iniciarSesion(sistema, scan);
+			break;
+		default:
+			System.out.println("\n** Opcion invalida. Intente nuevamente **");		
+		}
+		menuMitadSemestreAlumno(sistema, scan, correo);
+	}
+
 	private static void menuInicioSemestreAlumno(SistemaUCR sistema, Scanner scan,
 			String correo) {
 		System.out.println("\n>--- MENU INICIO DE SEMESTRE ---<\n");
 		System.out.println("[1] Inscripcion de asignaturas");
 		System.out.println("[2] Eliminacion de asignaturas");
+		System.out.println("[3] Volver al inicio de sesion");
 		System.out.print("Opcion: ");
 		String opcion = scan.nextLine();
 		switch (opcion) {
@@ -92,12 +114,39 @@ public class Main {
 		case "2":
 			eliminarAsignatura(sistema, scan, correo);
 			break;
+		case "3":
+			iniciarSesion(sistema, scan);
+			break;
 		default:
 			System.out.println("\n** Opcion invalida. Intente nuevamente **");
-			Main.menuInicioSemestreAlumno(sistema, scan, correo);
 		}
+		Main.menuInicioSemestreAlumno(sistema, scan, correo);
 	}
 	
+	private static void eliminarAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
+		System.out.println("\n>--- ELIMINAR ASIGNATURA ---<\n");
+		if (!sistema.chequearAsignaturasInscritas(correo)) {
+			System.out.println("\n** No tienes asignaturas inscritas **");
+		}
+		else {
+			System.out.println("* Asignaturas inscritas:\n");
+			System.out.println(sistema.obtenerAsignaturasInscritas(correo));
+			System.out.print("Codigo de la asignatura que desea eliminar: ");
+			String codigo = scan.nextLine();
+			try {
+				if (sistema.eliminarAsignaturaInscrita(correo, codigo)) {
+					System.out.println("\n** Asignatura eliminada! **");
+				}
+				else {
+					System.out.println("/n** No tienes inscrita esta asignatura **");
+				}
+			}
+			catch (NullPointerException e) {
+				System.out.println("\n** " + e.getMessage() + " **");
+			}
+		}
+	}
+
 	private static void inscribirAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
 		System.out.println("\n>--- INSCRIPCION DE ASIGNATURAS<---\n");
 		
