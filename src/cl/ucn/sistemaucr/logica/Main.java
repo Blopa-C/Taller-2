@@ -35,8 +35,20 @@ public class Main {
 			else if (correo.split("@")[1].equals("alumnos.ucn.cl")) {
 				try {
 					if (sistema.validarAlumno(correo, contrasena)) {
-						int op = ingresarFecha();
-						
+						int op = ingresarFecha(scan);
+						switch (op) {
+						case 1:
+							menuInicioSemestreAlumno(sistema, scan, correo);
+							break;
+						case 2:
+							break;
+						case 3:
+							break;
+						case 4:
+							break;
+						case 5:
+							break;
+						}
 					}
 					else {
 						System.out.println("Contraseña incorrecta");
@@ -66,42 +78,63 @@ public class Main {
 		iniciarSesion(sistema, scan);
 	}
 
+	private static void menuInicioSemestreAlumno(SistemaUCR sistema, Scanner scan,
+			String correo) {
+		System.out.println("\n>--- MENU INICIO DE SEMESTRE ---<\n");
+		System.out.println("[1] Inscripcion de asignaturas");
+		System.out.println("[2] Eliminacion de asignaturas");
+		System.out.print("Opcion: ");
+		String opcion = scan.nextLine();
+		switch (opcion) {
+		case "1":
+			inscribirAsignatura(sistema, scan, correo);
+			break;
+		case "2":
+			eliminarAsignatura(sistema, scan, correo);
+			break;
+		default:
+			System.out.println("\n** Opcion invalida. Intente nuevamente **");
+			Main.menuInicioSemestreAlumno(sistema, scan, correo);
+		}
+	}
 	
+	private static void inscribirAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
+		System.out.println("\n>--- INSCRIPCION DE ASIGNATURAS<---\n");
+		
+	}
 
-	private static int ingresarFecha() {
-		Scanner scan = new Scanner(System.in);
-		SimpleDateFormat dateFormat = new 
-                SimpleDateFormat ("dd-MM-yyyy");
-		System.out.println("Ingrese la fecha (con el formato dd-MM-yyyy): ");
+	private static int ingresarFecha(Scanner scan) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		System.out.println("Ingrese la fecha (dd/mm/aaaa): ");
 		String fecha = scan.nextLine();
 		int op = 0;
 		try {
 			Date dateInput = dateFormat.parse(fecha);
-			Date date1 = dateFormat.parse("07-03-2021");
-			Date date2 = dateFormat.parse("02-05-2021");
-			Date date3= dateFormat.parse("11-07-2021");
-			Date dateClosure = dateFormat.parse("26-07-2021");
-			if(dateInput.after(date1) && (dateInput.before(date2) || dateInput.equals(date2))) {
-				//op = 1;  Inicio de semestre
-			}else
-			if(dateInput.after(date2) && (dateInput.before(date3) || dateInput.equals(date3))) {
-				//op = 2; Mitad de semestre
-			}else
-			if(dateInput.after(date3) && dateInput.before(dateClosure)) {
-				//op = 3; Final de semestre
-			}else 
-			if(dateInput.equals(dateClosure)) {
-				//op = 4; Cierre del semestre
-			}else 
-			if(dateInput.after(dateClosure)){
-				//op = 5; Vacaciones
-			}else {
-				//op = 6; Fecha sin periodos correspondientes
-				ingresarFecha();
+			Date date1 = dateFormat.parse("07/03/2021");
+			Date date2 = dateFormat.parse("02/05/2021");
+			Date date3= dateFormat.parse("11/07/2021");
+			Date dateClosure = dateFormat.parse("26/07/2021");
+			if (dateInput.after(date1) && 
+					(dateInput.before(date2)) || dateInput.equals(date2)) {
+				op = 1; // Inicio de semestre
 			}
-		}catch (ParseException ex) {
-			System.out.println("Opcion invalida reintente");
-			ingresarFecha();
+			else if(dateInput.after(date2) && 
+					(dateInput.before(date3) || dateInput.equals(date3))) {
+				op =  2; // Mitad de semestre
+			}
+			else if (dateInput.after(date3) && dateInput.before(dateClosure)) {
+				op = 3; // Final de semestre
+			}
+			else if (dateInput.equals(dateClosure)) {
+				op = 4; // Cierre del semestre
+			}
+			else {
+				op = 5; // Fecha fuera de rango
+			}
+		}
+		catch (ParseException ex) {
+			System.out.println("Opcion invalida. Intente nuevamente");
+			ingresarFecha(scan);
 		}
 		return op;
 	}
