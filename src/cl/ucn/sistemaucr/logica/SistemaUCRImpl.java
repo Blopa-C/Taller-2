@@ -155,14 +155,27 @@ public class SistemaUCRImpl implements SistemaUCR {
 
 	@Override
 	public String obtenerAsignaturasInscritas(String correoAlumno) {
-		// TODO Auto-generated method stub
-		return null;
+		String salida = "";
+		Alumno alum = alumnos.getAlumnoAt(alumnos.indexOf(correoAlumno));
+		ListaParalelos inscritas = alum.getAsignaturasInscritas();
+		for (int i = 0; i < inscritas.getCantParalelos(); i++) {
+			Asignatura asig = paralelos.getParaleloAt(i).getAsignatura();
+			salida += "- " + asig.getNombre() + " (" + asig.getCodigo() + ")\n";
+		}
+		return salida.trim();
 	}
 
 	@Override
 	public boolean eliminarAsignaturaInscrita(String correoAlumno, String codigoAsignatura) {
-		// TODO Auto-generated method stub
-		return false;
+		Alumno alum = alumnos.getAlumnoAt(alumnos.indexOf(correoAlumno));
+		int iAsig = asignaturas.indexOf(codigoAsignatura);
+		if (iAsig == -1) {
+			throw new NullPointerException("La asignatura no existe");
+		}
+		else {
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			
+		}
 	}
 
 	@Override
