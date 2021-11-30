@@ -36,4 +36,12 @@ public class ListaNotas {
 			return null;
 		}
 	}
+	public NotaFinal getNotaAt(String asignatura) {
+		for(int i =0; i<cantElem ; i++) {
+			if(lista[i].getAsignatura().getCodigo().equals(asignatura)) {
+				return lista[i];
+			}
+		}
+		return null;
+	}
 }

@@ -45,4 +45,12 @@ public class ListaAsignaturas {
 			return null;
 		}
 	}
+	public Asignatura buscarAsignatura(String codigo) {
+		for (int i = 0; i < cantElem; i++) {
+			if (lista[i].getCodigo().equals(codigo)) {
+				return lista[i];
+			}
+		}
+		return null;
+	}
 }

@@ -1,5 +1,6 @@
 package cl.ucn.sistemaucr.dominio;
 
+import cl.ucn.sistemaucr.logica.ListaAsignaturas;
 import cl.ucn.sistemaucr.logica.ListaParalelos;
 
 public class Profesor {
@@ -7,6 +8,7 @@ public class Profesor {
 	private String correo;
 	private String contrasena;
 	private int salario;
+	private ListaAsignaturas asignaturasDictadas;//nuevo
 	private ListaParalelos asignaturas;
 	
 	public Profesor(String rut, String correo, String contrasena, int salario) {
@@ -15,6 +17,7 @@ public class Profesor {
 		this.contrasena = contrasena;
 		this.salario = salario;
 		asignaturas = new ListaParalelos(4);
+		asignaturasDictadas = new ListaAsignaturas(1000);//new
 	}
 
 	public String getRut() {
@@ -55,5 +58,24 @@ public class Profesor {
 
 	public void setAsignaturas(ListaParalelos asignaturas) {
 		this.asignaturas = asignaturas;
+	}
+
+	public ListaAsignaturas getAsignaturasDictadas() {
+		return asignaturasDictadas;
+	}
+
+	public void setAsignaturasDictadas(ListaAsignaturas asignaturasDictadas) {
+		this.asignaturasDictadas = asignaturasDictadas;
 	}	
+	
+	public String obtenerAlumnosPorParalelo(String codAsignatura) {
+		String salida = "";
+		for(int i =0; i < asignaturas.getCantParalelos(); i++) {
+			Paralelo asignatura = asignaturas.getParaleloAt(i);
+			if(asignatura.getAsignatura().getCodigo().equals(codAsignatura)){
+				salida += asignatura.getAlumnosInscritos();
+			}
+		}
+		return salida;
+	}
 }

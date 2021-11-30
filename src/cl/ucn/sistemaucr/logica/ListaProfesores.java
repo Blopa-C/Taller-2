@@ -45,4 +45,12 @@ public class ListaProfesores {
 			return null;
 		}
 	}
+	public Profesor buscarProfesor(String correo) {
+		for(int i = 0; i<cantElem ; i++) {
+			if(lista[i].getCorreo().equals(correo)) {
+				return lista[i];
+			}
+		}
+		return null;
+	}
 }
