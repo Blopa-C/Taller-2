@@ -24,4 +24,5 @@ public class NotaFinal {
 	public void setAsignatura(Asignatura asignatura) {
 		this.asignatura = asignatura;
 	}
+	
 }

@@ -37,7 +37,15 @@ public interface SistemaUCR {
 	String obtenerParalelosProfesor(String correoProfesor);
 	
 	String obtenerAlumnosInscritos(String codigoAsignatura, int numeroParalelo);
+	//nuevo
+	String obtenerAsignaturasDictadas(String correoProfesor);
 	
+	String obtenerAlumnosInscritos(String codigoAsignatura,String correoProfesor);
+	
+	boolean ingresarNota(String correoAlumno, String codigoAsignatura, double nota);
+	
+	//falta
+	//
 	String obtenerInfoAlumnosEgresados();
 	
 	String obtenerInfoEstudiantes();

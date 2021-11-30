@@ -222,5 +222,47 @@ public class SistemaUCRImpl implements SistemaUCR {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String obtenerAsignaturasDictadas(String correoProfesor) {
+		Profesor profe = profesores.buscarProfesor(correoProfesor);
+		String salida = "ASIGNATURAS DICTADAS POR EL DOCENTE \n";
+		for(int i =0; i < profe.getAsignaturas().getCantParalelos() ; i++ ) {
+			Asignatura asignatura = profe.getAsignaturasDictadas().getAsignaturaAt(i);
+			salida += asignatura.getNombre()+" codigo: "+ asignatura.getCodigo()+"\n";
+		}
+		return salida;
+	}
+
+	@Override
+	public String obtenerAlumnosInscritos(String codigoAsignatura,String correoProfesor) {
+		Asignatura asignatura = asignaturas.buscarAsignatura(codigoAsignatura);
+		Profesor profe = profesores.buscarProfesor(correoProfesor);
+		String salida = "";
+		if(codigoAsignatura == null) {
+			throw new NullPointerException("Asignatura no registrada");
+		}else {
+			for(int i=0; i< profe.getAsignaturas().getCantParalelos(); i++) {
+				Paralelo p = profe.getAsignaturas().getParaleloAt(i);
+				if(p.getAsignatura().getCodigo().equals(codigoAsignatura)) {
+					salida += p.toStringAlumnos();
+				}
+			}
+		}
+		return salida;
+	}
+
+	@Override
+	public boolean ingresarNota(String correoAlumno, String codigoAsignatura, double nota) {
+		int index = alumnos.indexOf(correoAlumno);
+		Alumno alumno = alumnos.getAlumnoAt(index);
+		if(alumno == null) {
+			throw new NullPointerException("alumno no registrado");    
+		}else {
+			NotaFinal notaFinal = alumno.getAsignaturasCursadas().getNotaAt(codigoAsignatura);
+			notaFinal.setNota(nota);
+			return true;
+		}
+	}
 	
 }
