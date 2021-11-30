@@ -1,10 +1,6 @@
 package cl.ucn.sistemaucr.logica;
 
 import cl.ucn.sistemaucr.dominio.Paralelo;
-
-import java.util.Arrays;
-
-import cl.ucn.sistemaucr.dominio.Alumno;
 import cl.ucn.sistemaucr.dominio.Asignatura;
 
 public class ListaParalelos {

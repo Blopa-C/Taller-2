@@ -1,6 +1,5 @@
 package cl.ucn.sistemaucr.dominio;
 
-import cl.ucn.sistemaucr.logica.ListaAsignaturas;
 import cl.ucn.sistemaucr.logica.ListaParalelos;
 
 public class Profesor {
@@ -8,16 +7,14 @@ public class Profesor {
 	private String correo;
 	private String contrasena;
 	private int salario;
-	private ListaAsignaturas asignaturasDictadas;//nuevo
-	private ListaParalelos asignaturas;
+	private ListaParalelos paralelos;
 	
 	public Profesor(String rut, String correo, String contrasena, int salario) {
 		this.rut = rut;
 		this.correo = correo;
 		this.contrasena = contrasena;
 		this.salario = salario;
-		asignaturas = new ListaParalelos(4);
-		asignaturasDictadas = new ListaAsignaturas(1000);//new
+		paralelos = new ListaParalelos(4);
 	}
 
 	public String getRut() {
@@ -52,30 +49,11 @@ public class Profesor {
 		this.salario = salario;
 	}
 
-	public ListaParalelos getAsignaturas() {
-		return asignaturas;
+	public ListaParalelos getParalelos() {
+		return paralelos;
 	}
 
-	public void setAsignaturas(ListaParalelos asignaturas) {
-		this.asignaturas = asignaturas;
-	}
-
-	public ListaAsignaturas getAsignaturasDictadas() {
-		return asignaturasDictadas;
-	}
-
-	public void setAsignaturasDictadas(ListaAsignaturas asignaturasDictadas) {
-		this.asignaturasDictadas = asignaturasDictadas;
+	public void setParalelos(ListaParalelos paralelos) {
+		this.paralelos = paralelos;
 	}	
-	
-	public String obtenerAlumnosPorParalelo(String codAsignatura) {
-		String salida = "";
-		for(int i =0; i < asignaturas.getCantParalelos(); i++) {
-			Paralelo asignatura = asignaturas.getParaleloAt(i);
-			if(asignatura.getAsignatura().getCodigo().equals(codAsignatura)){
-				salida += asignatura.getAlumnosInscritos();
-			}
-		}
-		return salida;
-	}
 }
