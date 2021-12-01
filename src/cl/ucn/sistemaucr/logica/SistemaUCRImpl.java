@@ -245,8 +245,15 @@ public class SistemaUCRImpl implements SistemaUCR {
 			throw new NullPointerException("Alumno no registrado");    
 		} else {
 			Asignatura asig = asignaturas.getAsignaturaAt(asignaturas.indexOf(codigoAsignatura));
+			ListaNotas notasAlum = alumno.getAsignaturasCursadas();
+			ListaParalelos inscritasAlum = alumno.getAsignaturasInscritas();
 			NotaFinal notaFinal = new NotaFinal(nota, asig);
-			return alumno.getAsignaturasCursadas().ingresarNota(notaFinal);
+			boolean ingreso = notasAlum.ingresarNota(notaFinal);
+			if (ingreso) {
+				inscritasAlum.eliminarParalelo(asig);
+				return true;
+			}
+			else return false;
 		}
 	}
 
@@ -258,7 +265,29 @@ public class SistemaUCRImpl implements SistemaUCR {
 
 	@Override
 	public String obtenerInfoEstudiantes() {
-		// TODO Auto-generated method stub
-		return null;
+		String salida = "";
+		for (int i = 0; i < alumnos.getCantAlumnos(); i++) {
+			Alumno alum = alumnos.getAlumnoAt(i);
+			String rut = alum.getRut();
+			String correo = alum.getCorreo();
+			int nivel = alum.getNivel();
+			String contra = alum.getContrasena();
+			salida += rut + "," + correo + "," + nivel + "," + contra + "\n";
+			ListaNotas cursadas = alum.getAsignaturasCursadas();
+			salida += cursadas.getCantNotas() + "\n";
+			for (int j = 0; j < cursadas.getCantNotas(); j++) {
+				NotaFinal nota = cursadas.getNotaAt(j);
+				Asignatura asig = nota.getAsignatura();
+				salida += asig.getCodigo() + "," + nota.getNota() + "\n";
+			}
+			ListaParalelos inscritas = alum.getAsignaturasInscritas();
+			salida += inscritas.getCantParalelos();
+			for (int j = 0; j < inscritas.getCantParalelos(); j++) {
+				Paralelo paral = inscritas.getParaleloAt(j);
+				Asignatura asig = paral.getAsignatura();
+				salida += asig.getCodigo() + "," + paral.getNumero() + "\n";
+			}
+		}
+		return salida.trim();
 	}
 }
