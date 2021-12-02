@@ -198,6 +198,18 @@ public class SistemaUCRImpl implements SistemaUCR {
 			}
 		}
 	}
+	
+	@Override
+	public boolean chequarAsignaturasDictadas(String correoProfesor) {
+		Profesor prof = profesores.getProfesorAt(profesores.indexOf(correoProfesor));
+		ListaParalelos paralelos = prof.getParalelos();
+		if (paralelos.getCantParalelos() == 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 	@Override
 	public String obtenerParalelosProfesor(String correoProfesor) {

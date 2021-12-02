@@ -34,6 +34,8 @@ public interface SistemaUCR {
 	
 	boolean eliminarAsignaturaInscrita(String correoAlumno, String codigoAsignatura);
 	
+	boolean chequarAsignaturasDictadas(String correoProfesor);
+	
 	String obtenerParalelosProfesor(String correoProfesor);
 	
 	String obtenerAlumnosInscritos(String codigoAsignatura, int numeroParalelo);
