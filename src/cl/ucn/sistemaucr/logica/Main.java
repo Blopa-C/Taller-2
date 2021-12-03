@@ -13,12 +13,12 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		SistemaUCR sistema = new SistemaUCRImpl();
 		Scanner scan = new Scanner(System.in);
-		/*
-		 * leerArchivoAsignaturas(sistema);
-		 * leerArchivoProfesores(sistema);
-		 * leerArchivoParalelos(sistema);
-		 * leerArchivoEstudiantes(sistema);
-		 */
+		
+		  leerArchivoAsignaturas(sistema);
+		  leerArchivoProfesores(sistema);
+		  leerArchivoParalelos(sistema);
+		  leerArchivoEstudiantes(sistema);
+		 
 		iniciarSesion(sistema, scan);
 	}
 
@@ -338,7 +338,7 @@ public class Main {
 		Scanner scan = new Scanner(new File("estudiantes.txt"));
 		outer:
 		while (scan.hasNextLine()) {
-			String[] partes = scan.nextLine().split("");
+			String[] partes = scan.nextLine().split(",");
 			int cont = 0;
 			String rut = partes[cont++];
 			String correo = partes[cont++];
@@ -381,7 +381,8 @@ public class Main {
 		Scanner scan = new Scanner(new File("paralelos.txt"));
 		outer:
 		while (scan.hasNextLine()) {
-			String[] partes = scan.nextLine().split("");
+			String[] partes = scan.nextLine().split(",");
+			System.out.println(scan.nextLine());
 			int cont = 0;
 			int numero = Integer.parseInt(partes[cont++]);
 			String codigo = partes[cont++];
@@ -393,6 +394,7 @@ public class Main {
 				}
 			}
 			catch (NullPointerException e) {
+				System.out.println("Paralelo no ingresado");//borrar
 				System.out.println(e.getMessage());
 			}
 		}
@@ -403,7 +405,7 @@ public class Main {
 		Scanner scan = new Scanner(new File("profesores.txt"));
 		outer:
 		while (scan.hasNextLine()) {
-			String[] partes = scan.nextLine().split("");
+			String[] partes = scan.nextLine().split(",");
 			String rut = partes[0];
 			String correo = partes[1];
 			String contrasena = partes[2];
@@ -420,7 +422,7 @@ public class Main {
 		Scanner scan = new Scanner(new File("asignaturas.txt"));
 		outer:
 		while (scan.hasNextLine()) {
-			String[] partes = scan.nextLine().split("");
+			String[] partes = scan.nextLine().split(",");
 			String codigo = partes[0];
 			String nombre = partes[1];
 			int creditos = Integer.parseInt(partes[2]);
@@ -430,7 +432,7 @@ public class Main {
 				int cantAsig = Integer.parseInt(partes[5]);
 				String[] prerrequisitos = new String[cantAsig];
 				int j = 0;
-				for (int i = 6; i < i + cantAsig; i++) {
+				for (int i = 6; i < 6 + cantAsig; i++) {
 					prerrequisitos[j++] = partes[i];
 				}
 				if (!sistema.ingresarAsignaturaObligatoria(codigo, nombre, creditos, nivel, 
@@ -438,7 +440,7 @@ public class Main {
 					System.out.println("No hay espacio para mas asignaturas en el sistema");
 					break outer;
 				};
-			}
+			} 
 			else {
 				int cantPrerreq = Integer.parseInt(partes[4]);
 				if (!sistema.ingresarAsignaturaOpcional(codigo, nombre, creditos, cantPrerreq)) {
