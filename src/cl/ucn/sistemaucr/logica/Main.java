@@ -270,14 +270,14 @@ public class Main {
 		else {
 			System.out.println("* Asignaturas inscritas:\n");
 			System.out.println(sistema.obtenerAsignaturasInscritas(correo));
-			System.out.print("Codigo de la asignatura que desea eliminar: ");
+			System.out.print("\nCodigo de la asignatura que desea eliminar: ");
 			String codigo = scan.nextLine();
 			try {
 				if (sistema.eliminarAsignaturaInscrita(correo, codigo)) {
 					System.out.println("\n** Asignatura eliminada! **");
 				}
 				else {
-					System.out.println("/n** No tienes inscrita esta asignatura **");
+					System.out.println("\n** No tienes inscrita esta asignatura **");
 				}
 			}
 			catch (NullPointerException e) {
@@ -295,7 +295,36 @@ public class Main {
 
 	private static void inscribirAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
 		System.out.println("\n>--- INSCRIBIR ASIGNATURA ---<\n");
-		
+		System.out.println("* Asignaturas disponibles:\n");
+		System.out.println(sistema.obtenerAsignaturasInscritas(correo));
+		System.out.println("\nCodigo de la asignatura que desea inscribir: ");
+		String codigo = scan.nextLine();
+		try {
+			if (!sistema.chequearCuposParalelos(codigo)) {
+				System.out.println("\n** No hay paralelos con cupos disponibles **");
+			}
+			else {
+				System.out.println("\n* Paralelos disponibles:\n");
+				System.out.println(sistema.obtenerParalelosDisponibles(codigo));
+				System.out.println("\nNumero del paralelo que desea inscribir: ");
+				int numero = Integer.parseInt(scan.nextLine());
+				try {
+					if (!sistema.verificarCreditos(correo, codigo, numero)) {
+						System.out.println("\n** Exceso de creditos **");
+					}
+					else {
+						sistema.asociarParaleloAlumno(correo, codigo, numero);
+						System.out.println("\n** Paralelo inscrito! **");
+					}
+				}
+				catch (NullPointerException e) {
+					System.out.println("\n** " + e.getMessage() + " **");
+				}
+			}
+		}
+		catch (NullPointerException e) {
+			System.out.println("\n** " + e.getMessage() + " **");
+		}
 	}
 
 	private static int ingresarFecha(Scanner scan) {
