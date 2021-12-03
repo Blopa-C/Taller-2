@@ -3,6 +3,7 @@ package cl.ucn.sistemaucr.logica;
 import java.util.Date;
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ public class Main {
 		iniciarSesion(sistema, scan);
 	}
 
-	private static void iniciarSesion(SistemaUCR sistema, Scanner scan) {
+	private static void iniciarSesion(SistemaUCR sistema, Scanner scan) throws IOException {
 		System.out.println(("\n>--- INICIO DE SESION ---<\n"));
 		System.out.print("Correo: ");
 		String correo = scan.nextLine();
@@ -29,8 +30,19 @@ public class Main {
 		String contrasena = scan.nextLine();
 		try {
 			if (correo.equals("Admin") && contrasena.equals("GHI_789")) {
-				System.out.println("aqui admin");
-				// cerrarSemestre();
+				int op = ingresarFecha(scan);
+				switch (op) {
+				case 1:
+				case 2:
+				case 3:
+					System.out.println("\n** No hay acciones disponibles **");
+					System.exit(0);
+				case 4:
+					cerrarSemestre(sistema);
+				case 5:
+					System.out.println("\n** Disfurte sus vacaciones **");
+					System.exit(0);
+				}
 			}
 			else if (correo.split("@")[1].equals("alumnos.ucn.cl")) {
 				try {
@@ -39,16 +51,15 @@ public class Main {
 						switch (op) {
 						case 1:
 							menuInicioSemestreAlumno(sistema, scan, correo);
-							break;
 						case 2:
 							menuMitadSemestreAlumno(sistema, scan, correo);
-							break;
 						case 3:
-							break;
 						case 4:
-							break;
+							System.out.println("\n** No hay acciones disponibles **");
+							System.exit(0);
 						case 5:
-							break;
+							System.out.println("\n** Disfrute sus vacaciones **");
+							System.exit(0);
 						}
 					}
 					else {
@@ -62,7 +73,23 @@ public class Main {
 			else if (correo.split("@")[1].equals("ucn.cl")) {
 				try {
 					if (sistema.validarProfesor(correo, contrasena)) {
-						// ingresarFecha();
+						int op = ingresarFecha(scan);
+						switch (op) {
+						case 1:
+							menuInicioSemestreProfesor(sistema, scan, correo);
+						case 2:
+							System.out.println("\n** No hay acciones disponibles **");
+							System.exit(0);
+						case 3:
+							menuFinalSemestreProfesor(sistema, scan, correo);
+							break;
+						case 4:
+							System.out.println("\n** No hay acciones disponibles **");
+							System.exit(0);
+						case 5:
+							System.out.println("\n** Disfrute sus vacaciones **");
+							System.exit(0);
+						}
 					}
 					else {
 						System.out.println("Contraseña incorrecta");
@@ -74,16 +101,116 @@ public class Main {
 			}
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("Correo invalido");
+			System.out.println("\n** Correo invalido **");
 		}
 		iniciarSesion(sistema, scan);
 	}
 
-	private static void menuMitadSemestreAlumno(SistemaUCR sistema, Scanner scan, 
-			String correo) {
+	private static void menuFinalSemestreProfesor(SistemaUCR sistema, Scanner scan, 
+			String correo) throws IOException {
+		System.out.println("\n>--- MENU FINAL DE SEMESTRE ---<\n");
+		System.out.println("[1] Ingresar nota final");
+		System.out.println("[2] Salir");
+		System.out.print("Opcion: ");
+		String opcion = scan.nextLine();
+		switch (opcion) {
+		case "1":
+			ingresarNotaFinal(sistema, scan, correo);
+			break;
+		case "2":
+			Main.sobreescribirArchivoEstudiantes(sistema);
+			System.exit(0);
+		default:
+			System.out.println("\n** Opcion invalida. Intente nuevamente **");
+		}
+		Main.menuFinalSemestreProfesor(sistema, scan, correo);
+	}
+
+	private static void ingresarNotaFinal(SistemaUCR sistema, Scanner scan, String correo) {
+		System.out.println("\n>--- INGRESAR NOTA FINAL ---<\n");
+		if (!sistema.chequarAsignaturasDictadas(correo)) {
+			System.out.println("** No dicta asignaturas este semestre **");
+		}
+		else {
+			System.out.println("* Paralelos dictados:\n");
+			System.out.println(sistema.obtenerParalelosProfesor(correo));
+			System.out.print("Codigo de la asignatura: ");
+			String codigo = scan.nextLine();
+			System.out.print("Numero de paralelo: ");
+			int numero = Integer.parseInt(scan.nextLine());
+			try {
+				System.out.println("\n* Alumnos inscritos:\n");
+				System.out.println(sistema.obtenerAlumnosInscritos(codigo, numero));
+				System.out.println("\nElija un alumno: ");
+				String correoAlumno = scan.nextLine();
+				try {
+					System.out.print("Nota: ");
+					double nota = Double.parseDouble(scan.nextLine());
+					if (sistema.ingresarNota(correoAlumno, codigo, nota)) {
+						System.out.println("\n** Nota ingresada correctamente! **");
+					}
+					else {
+						System.out.println("\n** Alumno no inscrito en este paralelo **");
+					}
+				}
+				catch (NullPointerException e) {
+					System.out.println("\n** " + e.getMessage() + " **");
+				}
+			}
+			catch (NullPointerException e) {
+				System.out.println("\n** " + e.getMessage() + " **");
+			}
+		}
+	}
+
+	private static void menuInicioSemestreProfesor(SistemaUCR sistema, 
+			Scanner scan, String correo) throws IOException {
 		System.out.println("\n>--- MENU MITAD DE SEMESTRE ---<\n");
-		System.out.println("[1] Eliminacion de asignaturas");
-		System.out.println("[2] Volver al inicio de sesion");
+		System.out.println("[1] Chequear alumnos");
+		System.out.println("[2] Salir");
+		System.out.print("Opcion: ");
+		String opcion = scan.nextLine();
+		switch (opcion) {
+		case "1":
+			Main.chequeoAlumnos(sistema, scan, correo);
+			break;
+		case "2":
+			Main.sobreescribirArchivoEstudiantes(sistema);
+			System.exit(0);
+		default:
+			System.out.println("\n** Opcion invalida. Intente nuevamente **");
+		}
+		Main.menuInicioSemestreProfesor(sistema, scan, correo);
+	}
+
+	private static void chequeoAlumnos(SistemaUCR sistema, Scanner scan, String correo) 
+			throws IOException {
+		System.out.println("\n>--- CHEQUEAR ALUMNOS ---<\n");
+		if (!sistema.chequarAsignaturasDictadas(correo)) {
+			System.out.println("** No dicta asignaturas este semestre **");
+		}
+		else {
+			System.out.println("* Paralelos dictados:\n");
+			System.out.println(sistema.obtenerParalelosProfesor(correo));
+			System.out.print("Codigo de la asignatura: ");
+			String codigo = scan.nextLine();
+			System.out.print("Numero de paralelo: ");
+			int numero = Integer.parseInt(scan.nextLine());
+			try {
+				System.out.println("\n* Alumnos inscritos:\n");
+				System.out.println(sistema.obtenerAlumnosInscritos(codigo, numero));
+			}
+			catch (NullPointerException e) {
+				System.out.println("/n** " + e.getMessage() + " **");
+			}
+		}
+	}
+
+	private static void menuMitadSemestreAlumno(SistemaUCR sistema, Scanner scan, 
+			String correo) throws IOException {
+		System.out.println("\n>--- MENU MITAD DE SEMESTRE ---<\n");
+		System.out.println("[1] Eliminar asignatura");
+		System.out.println("[2] Salir");
 		System.out.print("Opcion: ");
 		String opcion = scan.nextLine();
 		switch (opcion) {
@@ -91,20 +218,31 @@ public class Main {
 			eliminarAsignatura(sistema, scan, correo);
 			break;
 		case "2":
-			iniciarSesion(sistema, scan);
-			break;
+			Main.sobreescribirArchivoEstudiantes(sistema);
+			System.exit(0);
 		default:
-			System.out.println("\n** Opcion invalida. Intente nuevamente **");		
+			System.out.println("\n** Opcion invalida. Intente nuevamente **");
 		}
-		menuMitadSemestreAlumno(sistema, scan, correo);
+		Main.menuMitadSemestreAlumno(sistema, scan, correo);
+	}
+
+	private static void cerrarSemestre(SistemaUCR sistema) throws IOException {
+		FileWriter fw1 = new FileWriter("egresados.txt");
+		FileWriter fw2 = new FileWriter("estudiantes.txt");
+		String infoEgresados = sistema.obtenerInfoAlumnosEgresados();
+		String infoEstudiantes = sistema.obtenerInfoEstudiantes();
+		fw1.write(infoEgresados);
+		fw2.write(infoEstudiantes);
+		fw1.close(); fw2.close();
+		System.exit(0);
 	}
 
 	private static void menuInicioSemestreAlumno(SistemaUCR sistema, Scanner scan,
-			String correo) {
+			String correo) throws IOException {
 		System.out.println("\n>--- MENU INICIO DE SEMESTRE ---<\n");
 		System.out.println("[1] Inscripcion de asignaturas");
 		System.out.println("[2] Eliminacion de asignaturas");
-		System.out.println("[3] Volver al inicio de sesion");
+		System.out.println("[3] Salir");
 		System.out.print("Opcion: ");
 		String opcion = scan.nextLine();
 		switch (opcion) {
@@ -115,18 +253,19 @@ public class Main {
 			eliminarAsignatura(sistema, scan, correo);
 			break;
 		case "3":
-			iniciarSesion(sistema, scan);
-			break;
+			Main.sobreescribirArchivoEstudiantes(sistema);
+			System.exit(0);
 		default:
 			System.out.println("\n** Opcion invalida. Intente nuevamente **");
 		}
 		Main.menuInicioSemestreAlumno(sistema, scan, correo);
 	}
 	
-	private static void eliminarAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
+	private static void eliminarAsignatura(SistemaUCR sistema, Scanner scan, String correo) 
+			throws IOException {
 		System.out.println("\n>--- ELIMINAR ASIGNATURA ---<\n");
 		if (!sistema.chequearAsignaturasInscritas(correo)) {
-			System.out.println("\n** No tienes asignaturas inscritas **");
+			System.out.println("** No tienes asignaturas inscritas **");
 		}
 		else {
 			System.out.println("* Asignaturas inscritas:\n");
@@ -147,8 +286,15 @@ public class Main {
 		}
 	}
 
+	private static void sobreescribirArchivoEstudiantes(SistemaUCR sistema) throws IOException {
+		FileWriter fw = new FileWriter("estudiantes.txt");
+		String infoEstudiantes = sistema.obtenerInfoEstudiantes();
+		fw.write(infoEstudiantes);
+		fw.close();
+	}
+
 	private static void inscribirAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
-		System.out.println("\n>--- INSCRIPCION DE ASIGNATURAS<---\n");
+		System.out.println("\n>--- INSCRIBIR ASIGNATURA ---<\n");
 		
 	}
 

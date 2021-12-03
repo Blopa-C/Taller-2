@@ -1,6 +1,6 @@
 package cl.ucn.sistemaucr.logica;
 
-import cl.ucn.sistemaucr.dominio.NotaFinal;
+import cl.ucn.sistemaucr.dominio.*;
 
 public class ListaNotas {
 	private NotaFinal[] lista;
@@ -36,12 +36,13 @@ public class ListaNotas {
 			return null;
 		}
 	}
-	public NotaFinal getNotaAt(String asignatura) {
-		for(int i =0; i<cantElem ; i++) {
-			if(lista[i].getAsignatura().getCodigo().equals(asignatura)) {
-				return lista[i];
+	
+	public int indexOf(Asignatura asig) {
+		for (int i = 0; i < cantElem; i++) {
+			if (lista[i].getAsignatura() == asig) {
+				return i;
 			}
 		}
-		return null;
+		return -1;
 	}
 }

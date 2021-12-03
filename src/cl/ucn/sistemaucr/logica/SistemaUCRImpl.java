@@ -96,8 +96,12 @@ public class SistemaUCRImpl implements SistemaUCR {
 			else {
 				Paralelo paral = paralelos.getParaleloAt(iParal);
 				ListaAlumnos inscritos = paral.getAlumnosInscritos();
-				alum.getAsignaturasInscritas().ingresarParalelo(paral);
-				return inscritos.ingresarAlumno(alum);
+				boolean ingreso = inscritos.ingresarAlumno(alum);
+				if (ingreso) {
+					alum.getAsignaturasInscritas().ingresarParalelo(paral);
+					return true;
+				}
+				else return false;
 			}
 		}
 	}
@@ -135,22 +139,139 @@ public class SistemaUCRImpl implements SistemaUCR {
 			}
 		}
 	}
+	
+	private boolean chequearPrerrequisitos(String[] prerreqs, Alumno alum) {
+		ListaNotas notas = alum.getAsignaturasCursadas();
+		for (int i = 0; i < prerreqs.length; i++) {
+			String prerreq = prerreqs[i];
+			boolean flag = false;
+			for (int j = 0; j < notas.getCantNotas(); j++) {
+				NotaFinal notaF = notas.getNotaAt(j);
+				Asignatura asig = notaF.getAsignatura();
+				if (prerreq.equals(asig.getCodigo()) && notaF.getNota() >= 3.95) {
+					flag = true;
+				}
+			}
+			if (!flag) {
+				return false;
+			}
+		}
+		return true;
+	}
 
+	private ListaAsignaturas obtenerDisponibles(String correoAlumno) {
+		Alumno alum = alumnos.getAlumnoAt(alumnos.indexOf(correoAlumno));
+		ListaAsignaturas disponibles = new ListaAsignaturas(1000);
+		for (int i = 0; i < asignaturas.getCantAsignaturas(); i++) {
+			Asignatura asig = asignaturas.getAsignaturaAt(i);
+			if (asig instanceof AsignaturaObligatoria) {
+				String[] prerreq = ((AsignaturaObligatoria)asig).getPrerrequisitos();
+				if (chequearPrerrequisitos(prerreq, alum)) {
+					disponibles.ingresarAsignatura(asig);
+				}
+			}
+			else {
+				int credPrerreq = ((AsignaturaOpcional)asig).getCreditosPrerrequisito();
+				if (alum.getCreditos() >= credPrerreq) {
+					disponibles.ingresarAsignatura(asig);
+				}
+			}
+		}
+		eliminarYaCursadas(alum, disponibles);
+		return disponibles;
+	}
+	
+	private void eliminarYaCursadas(Alumno alum, ListaAsignaturas disponibles) {
+		ListaNotas notas = alum.getAsignaturasCursadas();
+		for (int i = 0; i < disponibles.getCantAsignaturas(); i++) {
+			Asignatura asig = disponibles.getAsignaturaAt(i);
+			int iNota = notas.indexOf(asig);
+			if (iNota != -1) {
+				NotaFinal notaF = notas.getNotaAt(iNota);
+				if (notaF.getNota() >= 3.95) {
+					disponibles.eliminarAsignatura(asig.getCodigo());
+				}
+			}
+		}
+	}
+	
 	@Override
 	public String obtenerAsignaturasDisponibles(String correoAlumno) {
-		return null;
+		String salida = "";
+		ListaAsignaturas disponibles = obtenerDisponibles(correoAlumno);
+		for (int i = 0; i < disponibles.getCantAsignaturas(); i++) {
+			Asignatura asig = disponibles.getAsignaturaAt(i);
+			salida += "- " + asig.getNombre() + " (" + asig.getCodigo() + ")\n";
+		}
+		return salida.trim();
 	}
 
+	@Override
+	public boolean chequearCuposParalelos(String codigoAsignatura) {
+		int iAsig = asignaturas.indexOf(codigoAsignatura);
+		if (iAsig == -1) {
+			throw new NullPointerException("La asignatura no existe");
+		}
+		else {
+			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
+			ListaParalelos paralelos = asig.getParalelos();
+			for (int i = 0; i < paralelos.getCantParalelos(); i++) {
+				Paralelo paral = paralelos.getParaleloAt(i);
+				ListaAlumnos inscritos = paral.getAlumnosInscritos();
+				if (inscritos.getCantAlumnos() < 100) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
 	@Override
 	public String obtenerParalelosDisponibles(String codigoAsignatura) {
-		// TODO Auto-generated method stub
-		return null;
+		Asignatura asig = asignaturas.getAsignaturaAt(asignaturas.indexOf(codigoAsignatura));
+		ListaParalelos paralelos = asig.getParalelos();
+		String salida = "";
+		for (int i = 0; i < paralelos.getCantParalelos(); i++) {
+			Paralelo paral = paralelos.getParaleloAt(i);
+			ListaAlumnos inscritos = paral.getAlumnosInscritos();
+			int cupos = 100 - inscritos.getCantAlumnos();
+			if (i > 0) {
+				salida += "- Paralelo " + paral.getNumero() + " - Cupos: " + cupos + "\n";
+			}
+		}
+		return salida.trim();
+	}
+	
+	private int calcularCreditosAlumno(Alumno alum) {
+		ListaParalelos inscritas = alum.getAsignaturasInscritas();
+		int creditos = 0;
+		for (int i = 0; i < inscritas.getCantParalelos(); i++) {
+			Paralelo paral = inscritas.getParaleloAt(i);
+			Asignatura asig = paral.getAsignatura();
+			creditos += asig.getCreditos();
+		}
+		return creditos;
 	}
 
 	@Override
-	public boolean verificarCreditos(String correoAlumno, String codigoAsignatura, int numero) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean verificarCreditos(String correoAlumno, String codigoAsignatura,
+			int numero) {
+		Alumno alum = alumnos.getAlumnoAt(alumnos.indexOf(correoAlumno));
+		Asignatura asig = asignaturas.getAsignaturaAt(asignaturas.indexOf(codigoAsignatura));
+		ListaParalelos paralelos = asig.getParalelos();
+		int iParalelo = paralelos.indexOf(numero);
+		if (iParalelo == -1) {  
+			throw new NullPointerException("El paralelo no existe");
+		}
+		else {
+			int creditos = calcularCreditosAlumno(alum);
+			if (creditos + asig.getCreditos() > 40) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
 	}
 	
 	@Override
@@ -198,71 +319,128 @@ public class SistemaUCRImpl implements SistemaUCR {
 			}
 		}
 	}
+	
+	@Override
+	public boolean chequarAsignaturasDictadas(String correoProfesor) {
+		Profesor prof = profesores.getProfesorAt(profesores.indexOf(correoProfesor));
+		ListaParalelos paralelos = prof.getParalelos();
+		if (paralelos.getCantParalelos() == 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 	@Override
 	public String obtenerParalelosProfesor(String correoProfesor) {
-		// TODO Auto-generated method stub
-		return null;
+		Profesor profe = profesores.getProfesorAt(profesores.indexOf(correoProfesor));
+		String salida = "";
+		ListaParalelos paralelos = profe.getParalelos();
+		for (int i = 0; i < paralelos.getCantParalelos(); i++) {
+			Paralelo paral = paralelos.getParaleloAt(i);
+			Asignatura asig = paral.getAsignatura();
+			salida += "- " + asig.getNombre() + " (" + asig.getCodigo() + ") - Paralelo "
+					+ paral.getNumero() + "\n";
+		}
+		return salida.trim();
 	}
 
 	@Override
 	public String obtenerAlumnosInscritos(String codigoAsignatura, int numeroParalelo) {
-		// TODO Auto-generated method stub
-		return null;
+		Asignatura asig = asignaturas.getAsignaturaAt(asignaturas.indexOf(codigoAsignatura));
+		if (asig == null) {
+			throw new NullPointerException("La asigntura no existe");
+		}
+		else {
+			ListaParalelos paralelos = asig.getParalelos();
+			Paralelo paral = paralelos.getParaleloAt(paralelos.indexOf(numeroParalelo));
+			if (paral == null) {
+				throw new NullPointerException("El paralelo no existe");
+			}
+			else {
+				String salida = "";
+				ListaAlumnos inscritos = paral.getAlumnosInscritos();
+				for (int i = 0; i < inscritos.getCantAlumnos(); i++) {
+					Alumno alum = inscritos.getAlumnoAt(i);
+					salida += "- " + alum.getCorreo() + "\n";
+				}
+				return salida.trim();
+			}
+		}
+	}
+	
+	@Override
+	public boolean ingresarNota(String correoAlumno, String codigoAsignatura, double nota) {
+		int index = alumnos.indexOf(correoAlumno);
+		Alumno alumno = alumnos.getAlumnoAt(index);
+		if (alumno == null) {
+			throw new NullPointerException("Alumno no registrado");    
+		} else {
+			Asignatura asig = asignaturas.getAsignaturaAt(asignaturas.indexOf(codigoAsignatura));
+			ListaNotas notasAlum = alumno.getAsignaturasCursadas();
+			ListaParalelos inscritasAlum = alumno.getAsignaturasInscritas();
+			NotaFinal notaFinal = new NotaFinal(nota, asig);
+			boolean ingreso = notasAlum.ingresarNota(notaFinal);
+			if (ingreso) {
+				inscritasAlum.eliminarParalelo(asig);
+				if (notaFinal.getNota() >= 3.95) {
+					alumno.setCreditos(alumno.getCreditos() + asig.getCreditos());
+				}
+				return true;
+			}
+			else return false;
+		}
 	}
 
 	@Override
 	public String obtenerInfoAlumnosEgresados() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String obtenerInfoEstudiantes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String obtenerAsignaturasDictadas(String correoProfesor) {
-		Profesor profe = profesores.buscarProfesor(correoProfesor);
-		String salida = "ASIGNATURAS DICTADAS POR EL DOCENTE \n";
-		for(int i =0; i < profe.getAsignaturas().getCantParalelos() ; i++ ) {
-			Asignatura asignatura = profe.getAsignaturasDictadas().getAsignaturaAt(i);
-			salida += asignatura.getNombre()+" codigo: "+ asignatura.getCodigo()+"\n";
-		}
-		return salida;
-	}
-
-	@Override
-	public String obtenerAlumnosInscritos(String codigoAsignatura,String correoProfesor) {
-		Asignatura asignatura = asignaturas.buscarAsignatura(codigoAsignatura);
-		Profesor profe = profesores.buscarProfesor(correoProfesor);
 		String salida = "";
-		if(codigoAsignatura == null) {
-			throw new NullPointerException("Asignatura no registrada");
-		}else {
-			for(int i=0; i< profe.getAsignaturas().getCantParalelos(); i++) {
-				Paralelo p = profe.getAsignaturas().getParaleloAt(i);
-				if(p.getAsignatura().getCodigo().equals(codigoAsignatura)) {
-					salida += p.toStringAlumnos();
+		for (int i = 0; i < alumnos.getCantAlumnos(); i++) {
+			Alumno alum = alumnos.getAlumnoAt(i);
+			boolean estaEgresado = true;
+			ListaNotas notas = alum.getAsignaturasCursadas();
+			if (notas.getCantNotas() == asignaturas.getCantAsignaturas()) {
+				for (int j = 0; j < notas.getCantNotas(); j++) {
+					NotaFinal nota = notas.getNotaAt(j);
+					if (nota.getNota() < 3.95) {
+						estaEgresado = false;
+					}
 				}
+			}
+			if (estaEgresado) {
+				salida += alum.getRut() + "\n";
+				alumnos.eliminarAlumno(alum.getCorreo());
 			}
 		}
 		return salida;
 	}
 
 	@Override
-	public boolean ingresarNota(String correoAlumno, String codigoAsignatura, double nota) {
-		int index = alumnos.indexOf(correoAlumno);
-		Alumno alumno = alumnos.getAlumnoAt(index);
-		if(alumno == null) {
-			throw new NullPointerException("alumno no registrado");    
-		}else {
-			NotaFinal notaFinal = alumno.getAsignaturasCursadas().getNotaAt(codigoAsignatura);
-			notaFinal.setNota(nota);
-			return true;
+	public String obtenerInfoEstudiantes() {
+		String salida = "";
+		for (int i = 0; i < alumnos.getCantAlumnos(); i++) {
+			Alumno alum = alumnos.getAlumnoAt(i);
+			String rut = alum.getRut();
+			String correo = alum.getCorreo();
+			int nivel = alum.getNivel();
+			String contra = alum.getContrasena();
+			salida += rut + "," + correo + "," + nivel + "," + contra + "\n";
+			ListaNotas cursadas = alum.getAsignaturasCursadas();
+			salida += cursadas.getCantNotas() + "\n";
+			for (int j = 0; j < cursadas.getCantNotas(); j++) {
+				NotaFinal nota = cursadas.getNotaAt(j);
+				Asignatura asig = nota.getAsignatura();
+				salida += asig.getCodigo() + "," + nota.getNota() + "\n";
+			}
+			ListaParalelos inscritas = alum.getAsignaturasInscritas();
+			salida += inscritas.getCantParalelos();
+			for (int j = 0; j < inscritas.getCantParalelos(); j++) {
+				Paralelo paral = inscritas.getParaleloAt(j);
+				Asignatura asig = paral.getAsignatura();
+				salida += asig.getCodigo() + "," + paral.getNumero() + "\n";
+			}
 		}
+		return salida.trim();
 	}
-	
 }

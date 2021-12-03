@@ -28,6 +28,20 @@ public class ListaAsignaturas {
 		}
 	}
 	
+	public boolean eliminarAsignatura(String codigo) {
+		int i = indexOf(codigo);
+		if (i == -1) {
+			return false;
+		}
+		else {
+			for (int j = i; j < cantElem; j++) {
+				lista[j] = lista[j + 1];
+			}
+			cantElem--;
+			return true;
+		}
+	}
+	
 	public int indexOf(String codigo) {
 		for (int i = 0; i < cantElem; i++) {
 			if (lista[i].getCodigo().equals(codigo)) {
@@ -44,13 +58,5 @@ public class ListaAsignaturas {
 		else {
 			return null;
 		}
-	}
-	public Asignatura buscarAsignatura(String codigo) {
-		for (int i = 0; i < cantElem; i++) {
-			if (lista[i].getCodigo().equals(codigo)) {
-				return lista[i];
-			}
-		}
-		return null;
 	}
 }

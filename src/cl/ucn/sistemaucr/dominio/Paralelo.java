@@ -46,23 +46,4 @@ public class Paralelo {
 	public void setAlumnosInscritos(ListaAlumnos alumnosInscritos) {
 		this.alumnosInscritos = alumnosInscritos;
 	}
-	public Alumno buscarAlumno(String correo) {
-		for(int i =0; i <  alumnosInscritos.getCantAlumnos() ; i++ ) {
-			Alumno alumno = alumnosInscritos.getAlumnoAt(i);
-			if(alumno.getCorreo().equals(correo)) {
-				return alumno;
-			}
-		}
-		return null;
-	}
-	public String toStringAlumnos() {
-		String salida = "";
-		salida += "Listado de alumnos paralelo N° "+numero+"\n";
-		for(int j =0; j <  alumnosInscritos.getCantAlumnos() ; j++ ) {
-			Alumno alumno = alumnosInscritos.getAlumnoAt(j);
-			salida += "RUT: "+alumno.getRut() +" CORREO: "+ alumno.getCorreo();
-			salida += "\n";
-		}
-		return salida;
-	}
 }

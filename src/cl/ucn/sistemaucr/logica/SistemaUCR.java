@@ -34,19 +34,19 @@ public interface SistemaUCR {
 	
 	boolean eliminarAsignaturaInscrita(String correoAlumno, String codigoAsignatura);
 	
+	boolean chequarAsignaturasDictadas(String correoProfesor);
+	
 	String obtenerParalelosProfesor(String correoProfesor);
 	
 	String obtenerAlumnosInscritos(String codigoAsignatura, int numeroParalelo);
-	//nuevo
-	String obtenerAsignaturasDictadas(String correoProfesor);
 	
-	String obtenerAlumnosInscritos(String codigoAsignatura,String correoProfesor);
-	
-	boolean ingresarNota(String correoAlumno, String codigoAsignatura, double nota);
+	boolean ingresarNota(String correoAlumno, String codigoAsignatura, double nota); // Nuevo
 	
 	//falta
 	//
 	String obtenerInfoAlumnosEgresados();
 	
 	String obtenerInfoEstudiantes();
+
+	boolean chequearCuposParalelos(String codigoAsignatura); // Nuevo
 }
