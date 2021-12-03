@@ -45,15 +45,20 @@ public class SistemaUCRImpl implements SistemaUCR {
 	@Override
 	public boolean ingresarParalelo(int numero, String codigo, String rutProfesor) {
 		int iAsig = asignaturas.indexOf(codigo);
-		int iProf = profesores.indexOf(rutProfesor);
-		if (iAsig == -1 || iProf == -1) {
-			throw new NullPointerException("Asignatura y/o profesor no existen");
+		int iProf = profesores.indexOfRut(rutProfesor);
+		if (iAsig == -1) {
+			throw new NullPointerException("Asignatura no existe");
+		}
+		else if (iProf == -1) {
+			throw new NullPointerException("Profesor no existe");
 		}
 		else {
 			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
 			Profesor prof = profesores.getProfesorAt(iProf);
 			Paralelo paral = new Paralelo(numero, asig, prof);
-			return paralelos.ingresarParalelo(paral);
+			paralelos.ingresarParalelo(paral);
+			asig.getParalelos().ingresarParalelo(paral);
+			return prof.getParalelos().ingresarParalelo(paral);
 		}
 	}
 
@@ -235,7 +240,7 @@ public class SistemaUCRImpl implements SistemaUCR {
 			Paralelo paral = paralelos.getParaleloAt(i);
 			ListaAlumnos inscritos = paral.getAlumnosInscritos();
 			int cupos = 100 - inscritos.getCantAlumnos();
-			if (i > 0) {
+			if (cupos > 0) {
 				salida += "- Paralelo " + paral.getNumero() + " - Cupos: " + cupos + "\n";
 			}
 		}
@@ -434,7 +439,7 @@ public class SistemaUCRImpl implements SistemaUCR {
 				salida += asig.getCodigo() + "," + nota.getNota() + "\n";
 			}
 			ListaParalelos inscritas = alum.getAsignaturasInscritas();
-			salida += inscritas.getCantParalelos();
+			salida += inscritas.getCantParalelos() + "\n";
 			for (int j = 0; j < inscritas.getCantParalelos(); j++) {
 				Paralelo paral = inscritas.getParaleloAt(j);
 				Asignatura asig = paral.getAsignatura();

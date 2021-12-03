@@ -1,11 +1,11 @@
 11.111.111-1,jose.manono@alumnos.ucn.cl,2,lol234
-4
+5
 2341,5.4
 2346,7.0
 8342,6.3
 2188,7.0
-1
-9348
+9348,1.0
+0
 11.111.112-k,luis.comunic@alumnos.ucn.cl,4,locuraA
 13
 2341,4.3
@@ -21,7 +21,8 @@
 3243,4.5
 4356,3.6
 3487,2.4
-0
+1
+2346,1
 11.234.211-2,maria.fernanda@alumnos.ucn.cl,7,aaalol2
 25
 2341,5.4

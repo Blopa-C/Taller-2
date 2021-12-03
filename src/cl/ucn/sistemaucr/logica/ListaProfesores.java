@@ -37,6 +37,15 @@ public class ListaProfesores {
 		return -1;
 	}
 	
+	public int indexOfRut(String rut) {
+		for (int i = 0; i < cantElem; i++) {
+			if (lista[i].getRut().equals(rut)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public Profesor getProfesorAt(int i) {
 		if (i >= 0 && i < cantElem) {
 			return lista[i];
