@@ -63,7 +63,7 @@ public class Main {
 						}
 					}
 					else {
-						System.out.println("Contraseña incorrecta");
+						System.out.println("\n** Contraseña incorrecta **");
 					}
 				}
 				catch (NullPointerException e) {
@@ -192,7 +192,7 @@ public class Main {
 		else {
 			System.out.println("* Paralelos dictados:\n");
 			System.out.println(sistema.obtenerParalelosProfesor(correo));
-			System.out.print("Codigo de la asignatura: ");
+			System.out.print("\nCodigo de la asignatura: ");
 			String codigo = scan.nextLine();
 			System.out.print("Numero de paralelo: ");
 			int numero = Integer.parseInt(scan.nextLine());
@@ -397,7 +397,7 @@ public class Main {
 				String codigo = partes[0];
 				int numParal = Integer.parseInt(partes[1]);
 				try {
-					sistema.asociarNotaAlumno(correo, codigo, numParal);
+					sistema.asociarParaleloAlumno(correo, codigo, numParal);
 				}
 				catch (NullPointerException e) {
 					System.out.println(e.getMessage());

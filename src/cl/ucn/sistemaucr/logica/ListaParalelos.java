@@ -18,6 +18,10 @@ public class ListaParalelos {
 		return cantElem;
 	}
 	
+	public int getMax() {
+		return max;
+	}
+	
 	public boolean ingresarParalelo(Paralelo obj) {
 		if (cantElem < max) {
 			lista[cantElem] = obj;

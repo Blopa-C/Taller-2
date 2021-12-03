@@ -55,10 +55,10 @@ public class SistemaUCRImpl implements SistemaUCR {
 		else {
 			Asignatura asig = asignaturas.getAsignaturaAt(iAsig);
 			Profesor prof = profesores.getProfesorAt(iProf);
-			Paralelo paral = new Paralelo(numero, asig, prof);
-			paralelos.ingresarParalelo(paral);
+			Paralelo paral = new Paralelo(numero, asig, prof);			
 			asig.getParalelos().ingresarParalelo(paral);
-			return prof.getParalelos().ingresarParalelo(paral);
+			prof.getParalelos().ingresarParalelo(paral);
+			return paralelos.ingresarParalelo(paral);
 		}
 	}
 
@@ -183,7 +183,12 @@ public class SistemaUCRImpl implements SistemaUCR {
 			}
 		}
 		eliminarYaCursadas(alum, disponibles);
+		eliminarYaInscritas(alum, disponibles);
 		return disponibles;
+	}
+	
+	private void eliminarYaInscritas(Alumno alum, ListaAsignaturas disponibles) {
+		
 	}
 	
 	private void eliminarYaCursadas(Alumno alum, ListaAsignaturas disponibles) {
