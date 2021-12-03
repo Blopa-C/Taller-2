@@ -188,7 +188,14 @@ public class SistemaUCRImpl implements SistemaUCR {
 	}
 	
 	private void eliminarYaInscritas(Alumno alum, ListaAsignaturas disponibles) {
-		
+		ListaParalelos inscritas = alum.getAsignaturasInscritas();
+		for (int i = 0; i < disponibles.getCantAsignaturas(); i++) {
+			Asignatura asig = disponibles.getAsignaturaAt(i);
+			int iParal = inscritas.indexOf(asig);
+			if (iParal != -1) {
+				disponibles.eliminarAsignatura(asig.getCodigo());
+			}
+		}
 	}
 	
 	private void eliminarYaCursadas(Alumno alum, ListaAsignaturas disponibles) {
