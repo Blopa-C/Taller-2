@@ -47,4 +47,6 @@ public interface SistemaUCR {
 	String obtenerInfoAlumnosEgresados();
 	
 	String obtenerInfoEstudiantes();
+
+	boolean chequearCuposParalelos(String codigoAsignatura); // Nuevo
 }
