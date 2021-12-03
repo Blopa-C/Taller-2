@@ -1,0 +1,33 @@
+2341,programacion,10,obligatoria,1,0
+2346,matematicaI,15,obligatoria,1,0
+8342,Intro. a la Fisica,10,obligatoria,1,0
+2188,Humanistico,5,opcional,1,0
+9348,Estructura de Datos,15,obligatoria,2,1,2341
+4930,Matematica II,10,obligatoria,2,1,2346
+3245,Fisica G I,10,obligatoria,2,1,8342
+2188,Humanistico I,5,opcional,40
+2656,Humanistico II,5,opcional,50
+2178,Humanistico III,5,opcional,60
+2578,Humanistico IV,5,opcional,85
+9328,Fisica G II,15,obligatoria,3,2,8342,3245
+6546,Programación Avanzada,15,obligatoria,3,2,2341,9348
+5436,Cálculo III,10,obligatoria,3,2,2346,4930
+3243,Fisica G III,15,obligatoria,4,3,8342,3245,9328
+4356,Diseño Sistemas Digitales,10,obligatoria,4,2,4930,5436
+3487,Ecuaciones Diferenciales,10,obligatoria,4,1,5436
+4556,Termodinámica,15,obligatoria,5,4,9328,5436,3243,3487
+3904,Fundamentos de la Computación,10,obligatoria,5,2,6546,4356
+3984,Base de Datos,10,obligatoria,5,2,6546,4356
+5436,Ingeniería de Software,10,obligatoria,6,1,3904
+5443,Lenguajes de Programacion,10,obligatoria,6,3,3904,3984,4556
+4356,Ingeniería Económica,10,obligatoria,6,2,3904,3984
+8372,Métodos Numéricos ,10,obligatoria,7,2,3487,4356
+7834,Dibujo de Ingeniería,10,obligatoria,7,2,5443,4356
+8723,Sistemas Operativos,10,obligatoria,7,2,3904,3984
+9339,Ingeniería y Desarrollo Sustentable,10,obligatoria,8,1,7834
+9238,Mecánica de Fluidos,10,obligatoria,8,3,8372,4356,4556
+2347,Redes de Computadores,10,obligatoria,8,1,8723
+8734,Formación Profesional II,10,obligatoria,9,3,9339,9238,2347
+6458,Sistemas de Información II,10,obligatoria,9,3,9339,9238,2347
+8943,Sistemas Inteligentes,10,obligatoria,9,3,9339,9238,2347
+1111,Capstone Project,35,obligatoria,10,3,8734,6458,8943
