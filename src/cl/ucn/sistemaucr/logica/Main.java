@@ -40,7 +40,7 @@ public class Main {
 				case 4:
 					cerrarSemestre(sistema);
 				case 5:
-					System.out.println("\n** Disfurte sus vacaciones **");
+					System.out.println("\n** Disfrute sus vacaciones **");
 					System.exit(0);
 				}
 			}
@@ -296,8 +296,8 @@ public class Main {
 	private static void inscribirAsignatura(SistemaUCR sistema, Scanner scan, String correo) {
 		System.out.println("\n>--- INSCRIBIR ASIGNATURA ---<\n");
 		System.out.println("* Asignaturas disponibles:\n");
-		System.out.println(sistema.obtenerAsignaturasInscritas(correo));
-		System.out.println("\nCodigo de la asignatura que desea inscribir: ");
+		System.out.println(sistema.obtenerAsignaturasDisponibles(correo));
+		System.out.print("\nCodigo de la asignatura que desea inscribir: ");
 		String codigo = scan.nextLine();
 		try {
 			if (!sistema.chequearCuposParalelos(codigo)) {
@@ -306,7 +306,7 @@ public class Main {
 			else {
 				System.out.println("\n* Paralelos disponibles:\n");
 				System.out.println(sistema.obtenerParalelosDisponibles(codigo));
-				System.out.println("\nNumero del paralelo que desea inscribir: ");
+				System.out.print("\nNumero del paralelo que desea inscribir: ");
 				int numero = Integer.parseInt(scan.nextLine());
 				try {
 					if (!sistema.verificarCreditos(correo, codigo, numero)) {
@@ -329,7 +329,7 @@ public class Main {
 
 	private static int ingresarFecha(Scanner scan) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		System.out.println("Ingrese la fecha (dd/mm/aaaa): ");
+		System.out.print("Ingrese la fecha (dd/mm/aaaa): ");
 		String fecha = scan.nextLine();
 		int op = 0;
 		try {
@@ -368,19 +368,19 @@ public class Main {
 		outer:
 		while (scan.hasNextLine()) {
 			String[] partes = scan.nextLine().split(",");
-			int cont = 0;
-			String rut = partes[cont++];
-			String correo = partes[cont++];
-			int nivel = Integer.parseInt(partes[cont++]);
-			String contrasena = partes[cont++];
+			String rut = partes[0];
+			String correo = partes[1];
+			int nivel = Integer.parseInt(partes[2]);
+			String contrasena = partes[3];
 			if (!sistema.ingresarAlumno(rut, correo, nivel, contrasena)) {
 				System.out.println("No hay espacio para mas estudiantes en el sistema");
 				break outer;
 			}
-			int cantAsig = Integer.parseInt(partes[cont++]);
+			int cantAsig = Integer.parseInt(scan.nextLine());
 			for (int i = 0; i < cantAsig; i++) {
-				String codigo = partes[cont++];
-				double nota = Double.parseDouble(partes[cont++]);
+				partes = scan.nextLine().split(",");
+				String codigo = partes[0];
+				double nota = Double.parseDouble(partes[1]);
 				try {
 					if (!sistema.asociarNotaAlumno(correo, codigo, nota)) {
 						System.out.print("No hay espacio para mas notas en el alumno");
@@ -391,10 +391,11 @@ public class Main {
 					System.out.println(e.getMessage());
 				}
 			}
-			cantAsig = Integer.parseInt(partes[cont++]);
+			cantAsig = Integer.parseInt(scan.nextLine());
 			for (int i = 0; i < cantAsig; i++) {
-				String codigo = partes[cont++];
-				int numParal = Integer.parseInt(partes[cont++]);
+				partes = scan.nextLine().split(",");
+				String codigo = partes[0];
+				int numParal = Integer.parseInt(partes[1]);
 				try {
 					sistema.asociarNotaAlumno(correo, codigo, numParal);
 				}
@@ -411,7 +412,6 @@ public class Main {
 		outer:
 		while (scan.hasNextLine()) {
 			String[] partes = scan.nextLine().split(",");
-			System.out.println(scan.nextLine());
 			int cont = 0;
 			int numero = Integer.parseInt(partes[cont++]);
 			String codigo = partes[cont++];
@@ -423,7 +423,6 @@ public class Main {
 				}
 			}
 			catch (NullPointerException e) {
-				System.out.println("Paralelo no ingresado");//borrar
 				System.out.println(e.getMessage());
 			}
 		}
