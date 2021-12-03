@@ -394,7 +394,6 @@ public class Main {
 				}
 			}
 			catch (NullPointerException e) {
-				System.out.println("Paralelo no ingresado");//borrar
 				System.out.println(e.getMessage());
 			}
 		}
