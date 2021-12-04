@@ -415,17 +415,7 @@ public class SistemaUCRImpl implements SistemaUCR {
 		String salida = "";
 		for (int i = 0; i < alumnos.getCantAlumnos(); i++) {
 			Alumno alum = alumnos.getAlumnoAt(i);
-			boolean estaEgresado = true;
-			ListaNotas notas = alum.getAsignaturasCursadas();
-			if (notas.getCantNotas() == asignaturas.getCantAsignaturas()) {
-				for (int j = 0; j < notas.getCantNotas(); j++) {
-					NotaFinal nota = notas.getNotaAt(j);
-					if (nota.getNota() < 3.95) {
-						estaEgresado = false;
-					}
-				}
-			}
-			if (estaEgresado) {
+			if (alum.getNivel() > 10) {
 				salida += alum.getRut() + "\n";
 				alumnos.eliminarAlumno(alum.getCorreo());
 			}

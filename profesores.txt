@@ -9,7 +9,7 @@
 14.535.456-6,manuel.salvado@ucn.cl,manoloFapolo,93940
 9.543.454-3,hector.blue@ucn.cl,hectosazo,930223
 2.382.392-8,oswaldo.painebien@ucn.cl,lolq1,929290
-7.938.728-8,marce.gallardo@ucnl.cl,marceloYi,98378
+7.938.728-8,marce.gallardo@ucn.cl,marceloYi,98378
 2.328.238-k,carlos.apple@ucn.cl,marcianeke2,910290
 8.121.283-3,leon.cubillos@ucn.cl,123h,29839
 23.329.234-k,rot.cypher@ucn.cl,222lol,290000

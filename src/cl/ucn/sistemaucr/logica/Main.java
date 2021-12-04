@@ -165,7 +165,7 @@ public class Main {
 
 	private static void menuInicioSemestreProfesor(SistemaUCR sistema, 
 			Scanner scan, String correo) throws IOException {
-		System.out.println("\n>--- MENU MITAD DE SEMESTRE ---<\n");
+		System.out.println("\n>--- MENU INICIO DE SEMESTRE ---<\n");
 		System.out.println("[1] Chequear alumnos");
 		System.out.println("[2] Salir");
 		System.out.print("Opcion: ");
@@ -227,13 +227,12 @@ public class Main {
 	}
 
 	private static void cerrarSemestre(SistemaUCR sistema) throws IOException {
+		System.out.println("\n** Cerrando semestre... **");
 		FileWriter fw1 = new FileWriter("egresados.txt");
-		FileWriter fw2 = new FileWriter("estudiantes.txt");
 		String infoEgresados = sistema.obtenerInfoAlumnosEgresados();
-		String infoEstudiantes = sistema.obtenerInfoEstudiantes();
 		fw1.write(infoEgresados);
-		fw2.write(infoEstudiantes);
-		fw1.close(); fw2.close();
+		fw1.close();
+		Main.sobreescribirArchivoEstudiantes(sistema);
 		System.exit(0);
 	}
 
